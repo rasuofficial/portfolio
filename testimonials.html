@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Rashed — Client Feedback</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --cyan: #5fd9f7; --purple: #c084fc; --bg: #0d0f1a;
+      --card-bg: #13161f; --card-bg2: #161925;
+      --border: rgba(255,255,255,0.07);
+      --text-muted: #5a7080; --text-dim: #8baabb;
+    }
+    html, body { min-height: 100%; background: var(--bg); font-family: 'Rajdhani', sans-serif; color: #fff; overflow-x: hidden; }
+
+    body::before {
+      content: ''; position: fixed; inset: 0;
+      background-image:
+        repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(255,255,255,0.025) 40px),
+        repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(255,255,255,0.025) 40px);
+      pointer-events: none; z-index: 0;
+    }
+    body::after {
+      content: ''; position: fixed; inset: 0;
+      background:
+        radial-gradient(ellipse 50% 50% at 0% 5%, rgba(0,190,190,0.17) 0%, transparent 55%),
+        radial-gradient(ellipse 50% 50% at 100% 95%, rgba(160,0,230,0.22) 0%, transparent 55%);
+      pointer-events: none; z-index: 0;
+    }
+
+    .page { position: relative; z-index: 1; min-height: 100vh; display: flex; flex-direction: column; padding-bottom: 5rem; }
+
+    /* Topbar */
+    .topbar { display: flex; justify-content: space-between; align-items: center; padding: 1rem 2.5rem; }
+    .brand { display: flex; align-items: center; gap: 0.6rem; text-decoration: none; background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 50px; padding: 0.45rem 1rem 0.45rem 0.5rem; }
+    .brand-dot { width: 28px; height: 28px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #1e3d5c, #0d1e30); border: 1.5px solid rgba(95,217,247,0.35); display: flex; align-items: center; justify-content: center; }
+    .brand-dot svg { width: 14px; height: 14px; }
+    .brand-name { font-family: 'Orbitron', sans-serif; font-size: 0.65rem; font-weight: 700; letter-spacing: 0.15em; color: var(--cyan); display: block; }
+    .brand-sub { font-size: 0.58rem; letter-spacing: 0.1em; color: var(--text-muted); display: block; }
+    .back-btn { display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1.2rem; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 50px; color: var(--text-dim); font-family: 'Rajdhani', sans-serif; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.1em; text-decoration: none; transition: all 0.2s; }
+    .back-btn:hover { background: rgba(95,217,247,0.07); border-color: rgba(95,217,247,0.3); color: var(--cyan); }
+    .back-btn svg { width: 13px; height: 13px; }
+
+    /* Page Header */
+    .page-header { text-align: center; padding: 2.2rem 1rem 2rem; animation: fadeDown 0.8s ease both; }
+    .page-header h1 { font-family: 'Rajdhani', sans-serif; font-size: clamp(1.8rem, 4.5vw, 2.6rem); font-weight: 700; color: #fff; letter-spacing: 0.04em; margin-bottom: 0.4rem; }
+    .page-header p { font-size: 0.8rem; color: var(--text-muted); letter-spacing: 0.15em; font-weight: 500; }
+
+    /* Grid */
+    .grid-wrap { max-width: 960px; width: 100%; margin: 0 auto; padding: 0 2rem; animation: fadeUp 1s 0.15s ease both; }
+    .tm-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+
+    /* Card */
+    .tm-card {
+      background: linear-gradient(145deg, var(--card-bg), var(--card-bg2));
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 1.8rem 1.6rem 1.5rem;
+      display: flex; flex-direction: column; justify-content: space-between;
+      gap: 1.4rem;
+      transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;
+      position: relative; overflow: hidden;
+    }
+    .tm-card::before {
+      content: '\201C';
+      position: absolute; top: 0.8rem; right: 1.2rem;
+      font-size: 5rem; line-height: 1;
+      color: rgba(95,217,247,0.06);
+      font-family: Georgia, serif;
+      pointer-events: none;
+    }
+    .tm-card:hover {
+      border-color: rgba(95,217,247,0.18);
+      transform: translateY(-4px);
+      box-shadow: 0 14px 44px rgba(0,0,0,0.4);
+    }
+
+    /* Quote text */
+    .tm-quote {
+      font-size: 0.88rem;
+      font-style: italic;
+      line-height: 1.75;
+      color: #b0c8d8;
+      font-weight: 400;
+    }
+
+    /* Author row */
+    .tm-author { display: flex; align-items: center; gap: 0.9rem; }
+
+    .tm-avatar {
+      width: 52px; height: 52px; border-radius: 50%;
+      overflow: hidden; flex-shrink: 0;
+      border: 2px solid rgba(95,217,247,0.2);
+      background: #1a2030;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.4rem;
+    }
+    .tm-avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+    .tm-name {
+      font-size: 0.88rem; font-weight: 700;
+      color: var(--cyan); letter-spacing: 0.04em;
+      margin-bottom: 0.15rem;
+    }
+    .tm-role {
+      font-size: 0.7rem; font-weight: 500;
+      color: var(--text-muted); letter-spacing: 0.06em;
+    }
+
+    /* Stars */
+    .tm-stars { color: #f59e0b; font-size: 0.75rem; margin-bottom: 0.1rem; letter-spacing: 0.08em; }
+
+    @keyframes fadeDown { from { opacity: 0; transform: translateY(-14px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeUp   { from { opacity: 0; transform: translateY(14px);  } to { opacity: 1; transform: translateY(0); } }
+
+    @media (max-width: 640px) {
+      .topbar { padding: 1rem 1.2rem; }
+      .grid-wrap { padding: 0 1rem; }
+      .tm-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <!-- Topbar -->
+  <header class="topbar">
+    <a class="brand" href="index.html">
+      <div class="brand-dot">
+        <svg viewBox="0 0 16 16" fill="none">
+          <circle cx="8" cy="8" r="4" fill="#5fd9f7" opacity="0.9"/>
+          <circle cx="8" cy="8" r="2" fill="#c084fc"/>
+        </svg>
+      </div>
+      <div>
+        <span class="brand-name">RASHED</span>
+        <span class="brand-sub">Web Developer</span>
+      </div>
+    </a>
+    <a class="back-btn" href="index.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      Back to Menu
+    </a>
+  </header>
+
+  <!-- Header -->
+  <div class="page-header">
+    <h1>Client Feedback</h1>
+    <p>FEEDBACK FROM PEOPLE I'VE WORKED WITH</p>
+  </div>
+
+  <!-- Testimonials Grid -->
+  <div class="grid-wrap">
+    <div class="tm-grid">
+
+      <!-- Card 1 -->
+      <div class="tm-card">
+        <div class="tm-quote">
+          Rashed delivered the website exactly as expected. The design was clean, responsive and performance was excellent.
+        </div>
+        <div class="tm-author">
+          <div class="tm-avatar">👨‍💼</div>
+          <div>
+            <div class="tm-stars">★★★★★</div>
+            <div class="tm-name">James Walker</div>
+            <div class="tm-role">Business Owner</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="tm-card">
+        <div class="tm-quote">
+          Great communication and fast delivery. The WordPress customization was smooth and professionally done.
+        </div>
+        <div class="tm-author">
+          <div class="tm-avatar">👩‍💼</div>
+          <div>
+            <div class="tm-stars">★★★★★</div>
+            <div class="tm-name">Emma Wilson</div>
+            <div class="tm-role">Marketing Manager</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="tm-card">
+        <div class="tm-quote">
+          The Django dashboard system was built with clean structure and worked perfectly for our workflow.
+        </div>
+        <div class="tm-author">
+          <div class="tm-avatar">👨‍🔬</div>
+          <div>
+            <div class="tm-stars">★★★★★</div>
+            <div class="tm-name">Daniel Kim</div>
+            <div class="tm-role">Startup Founder</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 4 -->
+      <div class="tm-card">
+        <div class="tm-quote">
+          Very professional and easy to work with. Farhad understood the project quickly and delivered quality work.
+        </div>
+        <div class="tm-author">
+          <div class="tm-avatar">👩‍🎨</div>
+          <div>
+            <div class="tm-stars">★★★★★</div>
+            <div class="tm-name">Sophia Carter</div>
+            <div class="tm-role">Creative Director</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

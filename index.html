@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Rashed — Full Stack Web Developer</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Rajdhani:wght@400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --cyan: #5fd9f7;
+      --purple: #c084fc;
+      --bg: #0d0f1a;
+      --card-bg: #13161f;
+      --card-bg2: #161925;
+      --border: rgba(255,255,255,0.06);
+      --text-muted: #5a7080;
+    }
+
+    html, body {
+      min-height: 100%;
+      background: var(--bg);
+      font-family: 'Rajdhani', sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* ── Grid background ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(255,255,255,0.03) 40px),
+        repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(255,255,255,0.03) 40px);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── Ambient glows ── */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 55% 45% at 0% 0%, rgba(0,190,190,0.22) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 45% at 100% 100%, rgba(160,0,230,0.25) 0%, transparent 60%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .page {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem 1.5rem 2rem;
+    }
+
+    /* ── Logo ── */
+    .logo {
+      margin-bottom: 1.4rem;
+      animation: fadeDown 0.8s ease both;
+    }
+    .logo svg { width: 72px; height: 72px; display: block; }
+
+    /* ── Name ── */
+    .name {
+      font-family: 'Orbitron', sans-serif;
+      font-size: clamp(2.4rem, 8vw, 3.6rem);
+      font-weight: 900;
+      letter-spacing: 0.25em;
+      background: linear-gradient(90deg, var(--cyan) 10%, var(--purple) 90%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-align: center;
+      animation: fadeDown 0.9s 0.1s ease both;
+    }
+
+    /* ── Subtitle ── */
+    .subtitle {
+      font-size: 0.75rem;
+      letter-spacing: 0.35em;
+      color: var(--text-muted);
+      text-align: center;
+      margin: 0.55rem 0 2.6rem;
+      font-weight: 500;
+      animation: fadeDown 1s 0.2s ease both;
+    }
+
+    /* ── Nav Grid ── */
+    .nav-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      width: 100%;
+      max-width: 540px;
+      animation: fadeUp 1s 0.3s ease both;
+    }
+
+    .nav-card {
+      background: linear-gradient(145deg, var(--card-bg), var(--card-bg2));
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1rem 1.6rem;
+      gap: 1rem;
+      cursor: pointer;
+      text-decoration: none;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.22s cubic-bezier(.25,.8,.25,1),
+                  border-color 0.22s,
+                  box-shadow 0.22s;
+    }
+
+    .nav-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 50% 0%, rgba(95,217,247,0.07), transparent 70%);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .nav-card:hover {
+      transform: translateY(-5px) scale(1.02);
+      border-color: rgba(95,217,247,0.2);
+      box-shadow: 0 12px 40px rgba(95,217,247,0.08), 0 2px 8px rgba(0,0,0,0.4);
+    }
+
+    .nav-card:hover::before { opacity: 1; }
+
+    /* ── Avatar bubble ── */
+    .avatar {
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      color: var(--cyan);
+      position: relative;
+      background: radial-gradient(circle at 35% 35%, #1e3d5c, #0d1e30);
+      box-shadow: inset 0 0 0 1.5px rgba(95,217,247,0.18),
+                  0 0 18px rgba(95,217,247,0.06);
+      transition: box-shadow 0.22s;
+    }
+
+    .nav-card:hover .avatar {
+      box-shadow: inset 0 0 0 1.5px rgba(95,217,247,0.45),
+                  0 0 24px rgba(95,217,247,0.18);
+    }
+
+    /* Purple tint for bottom row */
+    .nav-card.purple .avatar {
+      background: radial-gradient(circle at 35% 35%, #2a1e5c, #140d30);
+      color: var(--purple);
+      box-shadow: inset 0 0 0 1.5px rgba(192,132,252,0.18),
+                  0 0 18px rgba(192,132,252,0.06);
+    }
+    .nav-card.purple:hover .avatar {
+      box-shadow: inset 0 0 0 1.5px rgba(192,132,252,0.45),
+                  0 0 24px rgba(192,132,252,0.18);
+    }
+
+    .card-label {
+      font-size: 0.62rem;
+      letter-spacing: 0.22em;
+      color: var(--text-muted);
+      font-weight: 600;
+      text-align: center;
+      transition: color 0.22s;
+    }
+
+    .nav-card:hover .card-label { color: #8baabb; }
+
+    /* ── Footer ── */
+    .footer {
+      margin-top: 2.8rem;
+      font-size: 0.7rem;
+      letter-spacing: 0.08em;
+      color: #2e3e4e;
+      text-align: center;
+      animation: fadeUp 1s 0.5s ease both;
+    }
+
+    /* ── Animations ── */
+    @keyframes fadeDown {
+      from { opacity: 0; transform: translateY(-18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 480px) {
+      .nav-grid { grid-template-columns: repeat(3, 1fr); gap: 10px; }
+      .nav-card { padding: 1.4rem 0.5rem 1.2rem; border-radius: 14px; }
+      .avatar { width: 46px; height: 46px; font-size: 0.75rem; }
+      .card-label { font-size: 0.52rem; letter-spacing: 0.15em; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+
+    <!-- Logo -->
+    <div class="logo">
+      <svg viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Outer hex -->
+        <polygon points="36,4 66,20 66,52 36,68 6,52 6,20"
+          stroke="#5fd9f7" stroke-width="1.4" fill="none" opacity="0.45"/>
+        <!-- Mid hex -->
+        <polygon points="36,11 59,24 59,48 36,61 13,48 13,24"
+          stroke="#c084fc" stroke-width="1.1" fill="none" opacity="0.35"/>
+        <!-- Inner hex -->
+        <polygon points="36,19 53,29 53,43 36,53 19,43 19,29"
+          stroke="#5fd9f7" stroke-width="0.9" fill="none" opacity="0.25"/>
+        <!-- Core dot -->
+        <circle cx="36" cy="36" r="7.5" fill="#c084fc" opacity="0.9"/>
+        <circle cx="36" cy="36" r="3.8" fill="#5fd9f7" opacity="0.95"/>
+      </svg>
+    </div>
+
+    <!-- Name -->
+    <h1 class="name">RASHED</h1>
+    <p class="subtitle">FULL STACK WEB DEVELOPER</p>
+
+    <!-- Navigation Cards -->
+    <nav class="nav-grid" aria-label="Site sections">
+
+      <a class="nav-card" href="introduction.html">
+        <div class="avatar">IN</div>
+        <span class="card-label">INTRODUCTION</span>
+      </a>
+
+      <a class="nav-card" href="services.html">
+        <div class="avatar">SV</div>
+        <span class="card-label">SERVICES</span>
+      </a>
+
+      <a class="nav-card" href="gallery/gallery.html">
+        <div class="avatar">GL</div>
+        <span class="card-label">GALLERY</span>
+      </a>
+
+      <a class="nav-card purple" href="testimonials.html">
+        <div class="avatar">TM</div>
+        <span class="card-label">TESTIMONIALS</span>
+      </a>
+
+      <a class="nav-card purple" href="about.html">
+        <div class="avatar">AB</div>
+        <span class="card-label">ABOUT</span>
+      </a>
+
+      <a class="nav-card purple" href="contact.html">
+        <div class="avatar">CT</div>
+        <span class="card-label">CONTACT</span>
+      </a>
+
+    </nav>
+
+    <!-- Footer -->
+    <footer class="footer">© Design &amp; Development by Rashed Rahman</footer>
+
+  </div>
+</body>
+</html>

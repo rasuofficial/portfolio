@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Rashed — Get in Touch</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --cyan: #5fd9f7; --purple: #c084fc; --bg: #0d0f1a;
+      --card-bg: #13161f; --card-bg2: #161925;
+      --border: rgba(255,255,255,0.07);
+      --text-muted: #5a7080; --text-dim: #8baabb;
+    }
+    html, body { min-height: 100%; background: var(--bg); font-family: 'Rajdhani', sans-serif; color: #fff; overflow-x: hidden; }
+
+    body::before {
+      content: ''; position: fixed; inset: 0;
+      background-image:
+        repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(255,255,255,0.025) 40px),
+        repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(255,255,255,0.025) 40px);
+      pointer-events: none; z-index: 0;
+    }
+    body::after {
+      content: ''; position: fixed; inset: 0;
+      background:
+        radial-gradient(ellipse 50% 50% at 0% 5%, rgba(0,190,190,0.17) 0%, transparent 55%),
+        radial-gradient(ellipse 50% 50% at 100% 95%, rgba(160,0,230,0.22) 0%, transparent 55%);
+      pointer-events: none; z-index: 0;
+    }
+
+    .page { position: relative; z-index: 1; min-height: 100vh; display: flex; flex-direction: column; padding-bottom: 5rem; }
+
+    /* Topbar */
+    .topbar { display: flex; justify-content: space-between; align-items: center; padding: 1rem 2.5rem; }
+    .brand { display: flex; align-items: center; gap: 0.6rem; text-decoration: none; background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 50px; padding: 0.45rem 1rem 0.45rem 0.5rem; }
+    .brand-dot { width: 28px; height: 28px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #1e3d5c, #0d1e30); border: 1.5px solid rgba(95,217,247,0.35); display: flex; align-items: center; justify-content: center; }
+    .brand-dot svg { width: 14px; height: 14px; }
+    .brand-name { font-family: 'Orbitron', sans-serif; font-size: 0.65rem; font-weight: 700; letter-spacing: 0.15em; color: var(--cyan); display: block; }
+    .brand-sub { font-size: 0.58rem; letter-spacing: 0.1em; color: var(--text-muted); display: block; }
+    .back-btn { display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1.2rem; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 50px; color: var(--text-dim); font-family: 'Rajdhani', sans-serif; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.1em; text-decoration: none; transition: all 0.2s; }
+    .back-btn:hover { background: rgba(95,217,247,0.07); border-color: rgba(95,217,247,0.3); color: var(--cyan); }
+    .back-btn svg { width: 13px; height: 13px; }
+
+    /* Page Header */
+    .page-header { text-align: center; padding: 2rem 1rem 1.8rem; animation: fadeDown 0.8s ease both; }
+    .page-header h1 { font-family: 'Rajdhani', sans-serif; font-size: clamp(1.8rem, 4.5vw, 2.6rem); font-weight: 700; color: #fff; letter-spacing: 0.04em; margin-bottom: 0.4rem; }
+    .page-header p { font-size: 0.8rem; color: var(--text-muted); letter-spacing: 0.15em; font-weight: 500; }
+
+    /* Main Layout */
+    .contact-wrap {
+      max-width: 960px; width: 100%;
+      margin: 0 auto; padding: 0 2rem;
+      display: grid;
+      grid-template-columns: 1fr 0.75fr;
+      gap: 18px;
+      align-items: start;
+      animation: fadeUp 1s 0.15s ease both;
+    }
+
+    /* ── Left: Form ── */
+    .form-col { display: flex; flex-direction: column; gap: 12px; }
+
+    .form-field {
+      width: 100%;
+      background: linear-gradient(145deg, var(--card-bg), var(--card-bg2));
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 0.9rem 1.1rem;
+      color: #fff;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+      resize: none;
+    }
+    .form-field::placeholder { color: var(--text-muted); font-weight: 500; }
+    .form-field:focus {
+      border-color: rgba(95,217,247,0.35);
+      box-shadow: 0 0 0 3px rgba(95,217,247,0.06);
+      background: linear-gradient(145deg, #161925, #1a1e2e);
+    }
+    textarea.form-field { height: 120px; padding-top: 0.9rem; }
+
+    .send-btn {
+      width: 100%;
+      padding: 0.9rem;
+      background: linear-gradient(145deg, #161925, #1e2235);
+      border: 1px solid rgba(95,217,247,0.2);
+      border-radius: 12px;
+      color: var(--cyan);
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      cursor: pointer;
+      transition: background 0.22s, border-color 0.22s, box-shadow 0.22s, transform 0.15s;
+    }
+    .send-btn:hover {
+      background: linear-gradient(145deg, #1a2240, #1e2a4a);
+      border-color: rgba(95,217,247,0.5);
+      box-shadow: 0 0 24px rgba(95,217,247,0.12);
+      transform: translateY(-2px);
+    }
+    .send-btn:active { transform: translateY(0); }
+
+    /* ── Right: Info cards ── */
+    .info-col { display: flex; flex-direction: column; gap: 12px; }
+
+    .info-card {
+      display: flex; align-items: center; gap: 1rem;
+      background: linear-gradient(145deg, var(--card-bg), var(--card-bg2));
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.1rem 1.2rem;
+      transition: border-color 0.22s, transform 0.22s;
+    }
+    .info-card:hover { border-color: rgba(95,217,247,0.18); transform: translateY(-2px); }
+
+    .info-icon {
+      width: 44px; height: 44px; border-radius: 50%; flex-shrink: 0;
+      background: radial-gradient(circle at 35% 35%, #1e3d5c, #0d1e30);
+      border: 1.5px solid rgba(95,217,247,0.2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.15rem;
+    }
+    .info-label {
+      font-size: 0.65rem; letter-spacing: 0.1em;
+      color: var(--text-muted); font-weight: 600;
+      margin-bottom: 0.2rem;
+    }
+    .info-value {
+      font-size: 0.88rem; font-weight: 600;
+      color: #cde6f5; letter-spacing: 0.03em;
+    }
+
+    /* Success toast */
+    .toast {
+      display: none;
+      position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%);
+      background: rgba(95,217,247,0.12);
+      border: 1px solid rgba(95,217,247,0.35);
+      border-radius: 50px;
+      padding: 0.65rem 1.6rem;
+      color: var(--cyan);
+      font-size: 0.82rem; font-weight: 600; letter-spacing: 0.08em;
+      z-index: 999; white-space: nowrap;
+      animation: slideUp 0.3s ease;
+    }
+    .toast.show { display: block; }
+    @keyframes slideUp { from { opacity:0; transform: translateX(-50%) translateY(10px); } to { opacity:1; transform: translateX(-50%) translateY(0); } }
+
+    @keyframes fadeDown { from { opacity: 0; transform: translateY(-14px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeUp   { from { opacity: 0; transform: translateY(14px);  } to { opacity: 1; transform: translateY(0); } }
+
+    @media (max-width: 660px) {
+      .topbar { padding: 1rem 1.2rem; }
+      .contact-wrap { grid-template-columns: 1fr; padding: 0 1.2rem; gap: 14px; }
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <!-- Topbar -->
+  <header class="topbar">
+    <a class="brand" href="index.html">
+      <div class="brand-dot">
+        <svg viewBox="0 0 16 16" fill="none">
+          <circle cx="8" cy="8" r="4" fill="#5fd9f7" opacity="0.9"/>
+          <circle cx="8" cy="8" r="2" fill="#c084fc"/>
+        </svg>
+      </div>
+      <div>
+        <span class="brand-name">Rashed</span>
+        <span class="brand-sub">Web Developer</span>
+      </div>
+    </a>
+    <a class="back-btn" href="index.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      Back to Menu
+    </a>
+  </header>
+
+  <!-- Header -->
+  <div class="page-header">
+    <h1>Get in Touch</h1>
+    <p>LET'S CREATE SOMETHING AMAZING TOGETHER</p>
+  </div>
+
+  <!-- Contact Layout -->
+  <div class="contact-wrap">
+
+    <!-- Left: Form -->
+    <div class="form-col">
+      <input class="form-field" type="text" placeholder="Your Name" id="fname"/>
+      <input class="form-field" type="email" placeholder="Your Email" id="femail"/>
+      <input class="form-field" type="text" placeholder="Subject" id="fsubject"/>
+      <textarea class="form-field" placeholder="Your Message" id="fmessage"></textarea>
+      <button class="send-btn" onclick="sendMessage()">Send Message</button>
+    </div>
+
+    <!-- Right: Info -->
+    <div class="info-col">
+
+      <div class="info-card">
+        <div class="info-icon">📍</div>
+        <div>
+          <div class="info-label">Location</div>
+          <div class="info-value">Dhaka, Mirpur 02</div>
+        </div>
+      </div>
+
+      <div class="info-card">
+        <div class="info-icon">✉️</div>
+        <div>
+          <div class="info-label">Email</div>
+          <div class="info-value">bdrashed121@gmail.com</div>
+        </div>
+      </div>
+
+      <div class="info-card">
+        <div class="info-icon">📞</div>
+        <div>
+          <div class="info-label">Phone</div>
+          <div class="info-value">01783191898</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast">✓ Message sent successfully!</div>
+
+<script>
+  function sendMessage() {
+    const name    = document.getElementById('fname').value.trim();
+    const email   = document.getElementById('femail').value.trim();
+    const subject = document.getElementById('fsubject').value.trim();
+    const msg     = document.getElementById('fmessage').value.trim();
+
+    if (!name || !email || !subject || !msg) {
+      alert('Please fill in all fields.');
+      return;
+    }
+
+    // Show toast
+    const toast = document.getElementById('toast');
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 3000);
+
+    // Clear fields
+    document.getElementById('fname').value = '';
+    document.getElementById('femail').value = '';
+    document.getElementById('fsubject').value = '';
+    document.getElementById('fmessage').value = '';
+  }
+</script>
+</body>
+</html>

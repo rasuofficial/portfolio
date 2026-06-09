@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Rashed — My Projects</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --cyan: #5fd9f7; --purple: #c084fc; --bg: #0d0f1a;
+      --card-bg: #13161f; --card-bg2: #161925;
+      --border: rgba(255,255,255,0.07);
+      --text-muted: #5a7080; --text-dim: #8baabb;
+    }
+    html, body { min-height: 100%; background: var(--bg); font-family: 'Rajdhani', sans-serif; color: #fff; overflow-x: hidden; }
+
+    body::before {
+      content: ''; position: fixed; inset: 0;
+      background-image:
+        repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(255,255,255,0.025) 40px),
+        repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(255,255,255,0.025) 40px);
+      pointer-events: none; z-index: 0;
+    }
+    body::after {
+      content: ''; position: fixed; inset: 0;
+      background:
+        radial-gradient(ellipse 50% 50% at 0% 10%, rgba(0,190,190,0.18) 0%, transparent 55%),
+        radial-gradient(ellipse 50% 50% at 100% 90%, rgba(160,0,230,0.22) 0%, transparent 55%);
+      pointer-events: none; z-index: 0;
+    }
+
+    .page { position: relative; z-index: 1; min-height: 100vh; display: flex; flex-direction: column; padding-bottom: 5rem; }
+
+    /* Topbar */
+    .topbar { display: flex; justify-content: space-between; align-items: center; padding: 1rem 2.5rem; }
+    .brand { display: flex; align-items: center; gap: 0.6rem; text-decoration: none; background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 50px; padding: 0.45rem 1rem 0.45rem 0.5rem; }
+    .brand-dot { width: 28px; height: 28px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #1e3d5c, #0d1e30); border: 1.5px solid rgba(95,217,247,0.35); display: flex; align-items: center; justify-content: center; }
+    .brand-dot svg { width: 14px; height: 14px; }
+    .brand-name { font-family: 'Orbitron', sans-serif; font-size: 0.65rem; font-weight: 700; letter-spacing: 0.15em; color: var(--cyan); display: block; }
+    .brand-sub { font-size: 0.58rem; letter-spacing: 0.1em; color: var(--text-muted); display: block; }
+    .back-btn { display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1.2rem; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 50px; color: var(--text-dim); font-family: 'Rajdhani', sans-serif; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.1em; text-decoration: none; transition: all 0.2s; }
+    .back-btn:hover { background: rgba(95,217,247,0.07); border-color: rgba(95,217,247,0.3); color: var(--cyan); }
+    .back-btn svg { width: 13px; height: 13px; }
+
+    /* Page Header */
+    .page-header { text-align: center; padding: 2rem 1rem 0.5rem; animation: fadeDown 0.8s ease both; }
+    .page-header h1 { font-family: 'Rajdhani', sans-serif; font-size: clamp(1.7rem, 4vw, 2.4rem); font-weight: 700; color: #fff; letter-spacing: 0.04em; margin-bottom: 0.35rem; }
+    .page-header p { font-size: 0.82rem; color: var(--text-muted); letter-spacing: 0.08em; }
+
+    /* Tabs */
+    .tabs { display: flex; justify-content: center; gap: 0.5rem; margin: 1.6rem 0 2rem; animation: fadeDown 0.9s 0.1s ease both; flex-wrap: wrap; padding: 0 1rem; }
+    .tab { padding: 0.42rem 1.4rem; border-radius: 50px; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.1em; cursor: pointer; border: 1px solid var(--border); background: transparent; color: var(--text-muted); font-family: 'Rajdhani', sans-serif; transition: all 0.2s; }
+    .tab:hover { color: var(--text-dim); border-color: rgba(255,255,255,0.15); }
+    .tab.active { background: rgba(95,217,247,0.12); border-color: rgba(95,217,247,0.45); color: var(--cyan); }
+
+    /* Gallery Grid */
+    .gallery-wrap { max-width: 1000px; width: 100%; margin: 0 auto; padding: 0 2rem; animation: fadeUp 1s 0.2s ease both; }
+    .gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+
+    /* Project Card */
+    .proj-card {
+      position: relative; border-radius: 14px; overflow: hidden;
+      background: var(--card-bg); border: 1px solid var(--border);
+      aspect-ratio: 4/3; cursor: pointer;
+      transition: transform 0.25s cubic-bezier(.25,.8,.25,1), border-color 0.25s, box-shadow 0.25s;
+    }
+    .proj-card:hover { transform: translateY(-5px) scale(1.02); border-color: rgba(95,217,247,0.25); box-shadow: 0 16px 48px rgba(0,0,0,0.5); }
+
+    /* Placeholder image (colored gradient + label) */
+    .proj-img {
+      width: 100%; height: 100%; object-fit: cover;
+      transition: transform 0.35s, opacity 0.35s;
+      display: block;
+    }
+    .proj-card:hover .proj-img { transform: scale(1.06); opacity: 0.75; }
+
+    /* Placeholder div when no real img */
+    .proj-placeholder {
+      width: 100%; height: 100%;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 0.6rem; font-size: 2.5rem;
+      transition: transform 0.35s;
+    }
+    .proj-card:hover .proj-placeholder { transform: scale(1.06); }
+    .proj-placeholder span { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.08em; color: rgba(255,255,255,0.5); }
+
+    /* Overlay on hover */
+    .proj-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(5,8,18,0.92) 0%, rgba(5,8,18,0.3) 55%, transparent 100%);
+      opacity: 0; transition: opacity 0.28s;
+      display: flex; flex-direction: column;
+      justify-content: flex-end; padding: 1.1rem 1rem;
+    }
+    .proj-card:hover .proj-overlay { opacity: 1; }
+    .proj-title { font-size: 0.88rem; font-weight: 700; color: #fff; letter-spacing: 0.04em; margin-bottom: 0.2rem; }
+    .proj-tag { font-size: 0.62rem; font-weight: 600; letter-spacing: 0.12em; color: var(--cyan); }
+
+    /* Lightbox */
+    .lightbox { display: none; position: fixed; inset: 0; z-index: 100; background: rgba(5,8,18,0.92); backdrop-filter: blur(6px); align-items: center; justify-content: center; }
+    .lightbox.open { display: flex; animation: fadeIn 0.25s ease; }
+    .lb-inner { position: relative; max-width: 820px; width: 90%; }
+    .lb-inner img, .lb-placeholder { width: 100%; border-radius: 16px; border: 1px solid var(--border); display: block; }
+    .lb-placeholder { aspect-ratio: 16/9; display: flex; align-items: center; justify-content: center; font-size: 4rem; background: var(--card-bg); border-radius: 16px; border: 1px solid var(--border); }
+    .lb-close { position: absolute; top: -14px; right: -14px; width: 36px; height: 36px; border-radius: 50%; background: rgba(255,255,255,0.08); border: 1px solid var(--border); color: #fff; font-size: 1.1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s; }
+    .lb-close:hover { background: rgba(95,217,247,0.15); color: var(--cyan); }
+    .lb-info { margin-top: 1rem; text-align: center; }
+    .lb-title { font-size: 1.1rem; font-weight: 700; color: #fff; margin-bottom: 0.25rem; }
+    .lb-desc { font-size: 0.8rem; color: var(--text-muted); line-height: 1.6; }
+
+    @keyframes fadeDown { from { opacity: 0; transform: translateY(-14px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeUp   { from { opacity: 0; transform: translateY(14px);  } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeIn   { from { opacity: 0; } to { opacity: 1; } }
+
+    @media (max-width: 700px) {
+      .topbar { padding: 1rem 1.2rem; }
+      .gallery-wrap { padding: 0 1rem; }
+      .gallery-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    }
+    @media (max-width: 440px) {
+      .gallery-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <!-- Topbar -->
+  <header class="topbar">
+    <a class="brand" href="index.html">
+      <div class="brand-dot">
+        <svg viewBox="0 0 16 16" fill="none">
+          <circle cx="8" cy="8" r="4" fill="#5fd9f7" opacity="0.9"/>
+          <circle cx="8" cy="8" r="2" fill="#c084fc"/>
+        </svg>
+      </div>
+      <div>
+        <span class="brand-name">RASHED</span>
+        <span class="brand-sub">Web Developer</span>
+      </div>
+    </a>
+    <a class="back-btn" href="index.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      Back to Menu
+    </a>
+  </header>
+
+  <!-- Header -->
+  <div class="page-header">
+    <h1>My Projects</h1>
+    <p>Selected works I've built</p>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <button class="tab active" onclick="filterProjects('all', this)">All</button>
+    <button class="tab" onclick="filterProjects('web', this)">Web</button>
+    <button class="tab" onclick="filterProjects('django', this)">Django</button>
+    <button class="tab" onclick="filterProjects('wordpress', this)">WordPress</button>
+  </div>
+
+  <!-- Gallery -->
+  <div class="gallery-wrap">
+    <div class="gallery-grid" id="galleryGrid">
+
+      <!-- Project 1 - Travel Landing Page (Web) -->
+      <div class="proj-card" data-cat="web" onclick="openLightbox(this)"
+        data-title="Travel Landing Page"
+        data-desc="A modern travel landing page with dark theme, responsive layout and smooth animations.">
+        <div class="proj-placeholder" style="background: linear-gradient(135deg, #0a2010, #0d3318);">
+          <img src="rashed.png"
+          <span>Travel Landing</span>
+        </div>
+        <div class="proj-overlay">
+          <div class="proj-title">Travel Landing Page</div>
+          <div class="proj-tag">WEB</div>
+        </div>
+      </div>
+
+      <!-- Project 2 - Course Platform (Web) -->
+      <div class="proj-card" data-cat="web" onclick="openLightbox(this)"
+        data-title="Language Course Platform"
+        data-desc="An online language course platform with dark UI, course cards and CTA sections.">
+        <div class="proj-placeholder" style="background: linear-gradient(135deg, #0d1830, #0a1040);">
+          📚
+          <span>Course Platform</span>
+        </div>
+        <div class="proj-overlay">
+          <div class="proj-title">Language Course Platform</div>
+          <div class="proj-tag">WEB</div>
+        </div>
+      </div>
+
+      <!-- Project 3 - Dashboard (Django) -->
+      <div class="proj-card" data-cat="django" onclick="openLightbox(this)"
+        data-title="Admin Dashboard"
+        data-desc="A full-featured admin dashboard built with Django. Includes charts, tables and analytics panels.">
+        <div class="proj-placeholder" style="background: linear-gradient(135deg, #0a1e10, #0d2a18);">
+          📊
+          <span>Admin Dashboard</span>
+        </div>
+        <div class="proj-overlay">
+          <div class="proj-title">Admin Dashboard</div>
+          <div class="proj-tag">DJANGO</div>
+        </div>
+      </div>
+
+      <!-- Project 4 - Travel WordPress (WordPress) -->
+      <div class="proj-card" data-cat="wordpress" onclick="openLightbox(this)"
+        data-title="Travel WordPress Site"
+        data-desc="A responsive WordPress travel website with Elementor, custom theme and booking integration.">
+        <div class="proj-placeholder" style="background: linear-gradient(135deg, #0d1e2e, #0a1828);">
+          ✈️
+          <span>Travel WordPress</span>
+        </div>
+        <div class="proj-overlay">
+          <div class="proj-title">Travel WordPress Site</div>
+          <div class="proj-tag">WORDPRESS</div>
+        </div>
+      </div>
+
+      <!-- Project 5 - E-Commerce (Web) -->
+      <div class="proj-card" data-cat="web" onclick="openLightbox(this)"
+        data-title="E-Commerce Landing"
+        data-desc="A purple-themed e-commerce landing page with product showcase and animated sections.">
+        <div class="proj-placeholder" style="background: linear-gradient(135deg, #1a0d30, #28105a);">
+          🛒
+          <span>E-Commerce</span>
+        </div>
+        <div class="proj-overlay">
+          <div class="proj-title">E-Commerce Landing</div>
+          <div class="proj-tag">WEB</div>
+        </div>
+      </div>
+
+      <!-- Project 6 - REST API (Django) -->
+      <div class="proj-card" data-cat="django" onclick="openLightbox(this)"
+        data-title="REST API Backend"
+        data-desc="A scalable REST API built with Django REST Framework. Includes authentication, endpoints and docs.">
+        <div class="proj-placeholder" style="background: linear-gradient(135deg, #0a1428, #0d1e40);">
+          🔌
+          <span>REST API</span>
+        </div>
+        <div class="proj-overlay">
+          <div class="proj-title">REST API Backend</div>
+          <div class="proj-tag">DJANGO</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox(event)">
+  <div class="lb-inner">
+    <button class="lb-close" onclick="closeLightbox(null, true)">✕</button>
+    <div class="lb-placeholder" id="lbImg"></div>
+    <div class="lb-info">
+      <div class="lb-title" id="lbTitle"></div>
+      <div class="lb-desc" id="lbDesc"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function filterProjects(cat, btn) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    const cards = document.querySelectorAll('.proj-card');
+    cards.forEach(c => {
+      const show = cat === 'all' || c.dataset.cat === cat;
+      c.style.display = show ? 'block' : 'none';
+      if (show) { c.style.animation='none'; c.offsetHeight; c.style.animation='fadeUp 0.4s ease both'; }
+    });
+  }
+
+  function openLightbox(card) {
+    const lb = document.getElementById('lightbox');
+    const ph = card.querySelector('.proj-placeholder');
+    const lbImg = document.getElementById('lbImg');
+    lbImg.textContent = '';
+    // clone the emoji + style
+    const clone = ph.cloneNode(true);
+    clone.style.fontSize = '5rem';
+    clone.style.aspectRatio = '16/9';
+    clone.style.borderRadius = '0';
+    lbImg.style.background = ph.style.background;
+    lbImg.style.aspectRatio = '16/9';
+    lbImg.appendChild(clone);
+    document.getElementById('lbTitle').textContent = card.dataset.title;
+    document.getElementById('lbDesc').textContent = card.dataset.desc;
+    lb.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeLightbox(e, force) {
+    if (force || (e && e.target === document.getElementById('lightbox'))) {
+      document.getElementById('lightbox').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+  }
+
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(null, true); });
+</script>
+</body>
+</html>
